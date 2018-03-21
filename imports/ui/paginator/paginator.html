@@ -1,0 +1,39 @@
+<template name="paginator">
+  <nav class="pagination-container" aria-label="photos-paginator">
+    {{#if hasPages}}
+    <ul class="pagination">
+      <li class="page-item {{#if isInFirstPage}}disabled{{/if}}">
+        <a href="#" class="page-link previous-page" tabindex="-1" title="Previous page"> Previous </a>
+      </li>
+      {{#if arePreviousPagesHidden}}
+      {{#with 1}}
+      <li class="page-item">
+        <a href="#" class="page-link" title="Go to page {{.}}"> {{.}} </a>
+      </li>
+      {{/with}}
+      <li class="page-item">
+        <a href="#" class="page-link show-prev" title="Show previous pages"> ... </a>
+      </li>
+      {{/if}}
+      {{#each pagesToDisplay}}
+      <li class="page-item {{#if isActive}}active{{/if}}">
+        <a href="#" class="page-link page-sel" title="page {{.}}">{{.}}</a>
+      </li>
+      {{/each}}
+      {{#if areNextPagesHidden}}
+      <li class="page-item">
+        <a href="#" class="page-link show-next" title="Show next pages"> ... </a>
+      </li>
+      {{#with lastPage}}
+      <li class="page-item">
+        <a href="#" class="page-link" title="Go to page {{.}}"> {{.}} </a>
+      </li>
+      {{/with}}
+      {{/if}}
+      <li class="page-item {{#if isInLastPage}}disabled{{/if}}">
+        <a href="#" class="page-link next-page" title="Next page"> Next </a>
+      </li>
+    </ul>
+    {{/if}}
+  </nav>
+</template>

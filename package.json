@@ -1,0 +1,14 @@
+{
+  "name": "simple-todos-blaze",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.0.0-beta.36",
+    "bcrypt": "^1.0.3",
+    "exif-js": "^2.3.0",
+    "meteor-node-stubs": "^0.3.2",
+    "s3-ls": "^2.0.1"
+  }
+}

@@ -1,0 +1,12 @@
+<template name="albumListItem">
+  <div class="col-md-4 albumTile">
+    <a href="/albums/{{_id}}">
+      <div class="thumbnail">
+        <img class="img-responsive" src="{{ featuredImageUrl }}" alt="{{name}}" style="width:100%">
+        <div class="caption">
+          <p class="albumListName">{{name}}</p>
+        </div>
+      </div>
+    </a>
+  </div>
+</template>

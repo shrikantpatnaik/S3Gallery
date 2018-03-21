@@ -1,0 +1,14 @@
+<template name="albumList">
+  {{#if isReady}}
+  <div class="row">
+    {{#each albums}}
+    {{> albumListItem}}
+    {{/each}}
+  </div>
+  <div class="row">
+    {{> paginator pagination=templatePagination limit=12}}
+  </div>
+  {{else}}
+  Loading...
+  {{/if}}
+</template>

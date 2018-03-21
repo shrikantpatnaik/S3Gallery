@@ -1,0 +1,27 @@
+<template name="header">
+  <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Shrikant Patnaik Photography</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link {{#if isHome}} active{{/if}}" href="/">Home{{#if isHome}} <span class="sr-only">(current)</span>{{/if}}</a>
+        <a class="nav-item nav-link {{#if isAbout}} active{{/if}}" href="/about">About{{#if isAbout}} <span class="sr-only">(current)</span>{{/if}}</a>
+        {{#if currentUser}}
+        <a class="nav-item nav-link aws-update" href="#">Update From AWS</a>
+        <span class="nav-item nav-link disabled">Logged In</span>
+        <a class="nav-item nav-link logout" href="#">Logout</a>
+        {{ else }}
+        {{#if isAdmin}}
+        <form class="form-inline loginForm">
+          <input type="text" placeholder="username" name="loginEmail">
+          <input type="password" placeholder="password" name="loginPassword">
+          <input type="submit" value="Login">
+        </form>
+        {{/if}}
+        {{/if}}
+      </div>
+    </div>
+  </nav>
+</template>

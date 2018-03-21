@@ -1,0 +1,16 @@
+<template name="photoListItem">
+  <div class="col-md-4 photoTile">
+    {{#if isVideo}}
+    <div class="galleryItem hover-shadow">
+      <video class="galleryVideo">
+        <source src="{{ thumbUrl }}" type="video/mp4" preload="none">
+        </video>
+        <div class="playpause"></div>
+      </div>
+      {{else}}
+      <div class="galleryItem thumbnail hover-shadow">
+        <img class="photoListImage img-responsive" src="{{ thumbUrl }}" alt="{{key}}">
+      </div>
+      {{/if}}
+    </div>
+  </template>

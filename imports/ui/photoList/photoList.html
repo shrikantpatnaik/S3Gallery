@@ -1,0 +1,43 @@
+<template name="photoList">
+  {{#if isReady}}
+  <div class="row">
+    {{#each photos}}
+    {{> photoListItem photo=this index=@index}}
+    {{/each}}
+  </div>
+  <div class="row">
+    {{> paginator pagination=templatePagination limit=12}}
+  </div>
+  {{else}}
+  Loading...
+  {{/if}}
+
+  <!-- The Modal/Lightbox -->
+  <div id="myModal" class="modal">
+    <div class="close cursor">&times;</div>
+    <div class="modal-content">
+      <div id="loadingDiv" class="loading"></div>
+      <!-- <div class="quality">{{#if isHighQ}}Low{{else}}High{{/if}} Resolution</div> -->
+      <div class="mySlides">
+        {{#if isVideo}}
+        <video class="modalVideo" width="100%" controls controlsList="nodownload" loop>
+          <source src="{{getSelectedPhotoURL}}" type="video/mp4">
+          </video>
+          {{else}}
+          <img class="modalImage" src="{{getSelectedPhotoURL}}">
+          {{/if}}
+        </div>
+
+        {{#unless isFirstItem}}
+        <a class="prev">&#10094;</a>
+        {{/unless}}
+        {{#unless isLastItem}}
+        <a class="next">&#10095;</a>
+        {{/unless}}
+
+        <div class="caption-container">
+          <p class="caption"></p>
+        </div>
+      </div>
+    </div>
+  </template>
