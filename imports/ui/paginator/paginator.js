@@ -43,9 +43,6 @@ Template.paginator.helpers({
   hasPages: function () {
     return this.pagination && this.pagination.totalPages() > 1 && this.limit;
   },
-  getPaginationClass: function () {
-    return this.paginationClass || "pagination";
-  },
   isActive : function(){
     return this.valueOf() == Template.instance().data.pagination.currentPage();
   },
