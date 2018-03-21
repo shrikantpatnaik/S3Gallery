@@ -15,6 +15,7 @@ if(Meteor.isServer){
   }
 
   var bucketName = Meteor.settings.AWS.s3BucketName;
+  var mainFolder = Meteor.settings.AWS.s3s3BucketMainFolder;
 
   AWS.config.update({
     accessKeyId: Meteor.settings.AWS.accessKeyId,
@@ -28,12 +29,14 @@ if(Meteor.isServer){
     Bucket: bucketName
   };
 
-  var mainFolder = "Photos";
-
   function insertKeysIntoAlbum(params, albumId) {
     var data = s3.listObjectsV2Sync(params);
     _.forEach(data.Contents, function(object) {
-      if(_.includes(object.Key, 'LowQ')) {
+      if(Meteor.settings.AWS.s3LowQualityFolderName) {
+        if(_.includes(object.Key, Meteor.settings.AWS.s3LowQualityFolderName)) {
+            insertPhotoIfDoesntExist(object.Key, albumId)
+        }
+      } else {
         insertPhotoIfDoesntExist(object.Key, albumId)
       }
     })
