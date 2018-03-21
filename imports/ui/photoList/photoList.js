@@ -24,12 +24,39 @@ Template.photoList.onCreated(function bodyOnCreated() {
   });
   this.state = new ReactiveDict();
   this.state.set("HighQ", false)
+  this.modalIsOpen = false;
+  const templateInstance = this;
+
+  Meteor.startup(function () {
+    $(document).on('keyup', function (e) {
+      if(templateInstance.modalIsOpen) {
+        if(e.keyCode == 39) {
+          nextImage(templateInstance);
+        } else if (e.keyCode == 37) {
+          prevImage(templateInstance);
+        }
+      }
+    });
+  });
 });
+
+function nextImage(tInstance) {
+  if(tInstance.state.get("currentPhotoIndex") < tInstance.limitPerPage - 1) {
+      tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") + 1);
+  }
+}
+
+function prevImage(tInstance) {
+  if(tInstance.state.get("currentPhotoIndex") > 0) {
+      tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") - 1);
+  }
+}
 
 Template.photoList.events({
   'click .galleryItem'() {
     Template.instance().state.set('currentPhotoIndex', this.index)
     document.getElementById('myModal').style.display = "block";
+    Template.instance().modalIsOpen = true;
     document.getElementById('loadingDiv').style.display = "block"
   },
   'click #myModal'(e) {
@@ -41,20 +68,17 @@ Template.photoList.events({
     if(!_.includes(list, e.target.className)) {
       Template.instance().state.delete("currentPhotoIndex")
       document.getElementById('loadingDiv').style.display = "none"
+      Template.instance().modalIsOpen = false;
       document.getElementById('myModal').style.display = "none";
     }
   },
   'click .prev'() {
-    if(Template.instance().state.get("currentPhotoIndex") > 0) {
       document.getElementById('loadingDiv').style.display = "block"
-      Template.instance().state.set("currentPhotoIndex", Template.instance().state.get("currentPhotoIndex") - 1);
-    }
+      prevImage(Template.instance())
   },
   'click .next'() {
-    if(Template.instance().state.get("currentPhotoIndex") < Template.instance().limitPerPage - 1) {
       document.getElementById('loadingDiv').style.display = "block"
-      Template.instance().state.set("currentPhotoIndex", Template.instance().state.get("currentPhotoIndex") + 1);
-    }
+      nextImage(Template.instance());
   },
   'click .quality'() {
     document.getElementById('loadingDiv').style.display = "block"
