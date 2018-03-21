@@ -86,7 +86,7 @@ Template.photoList.helpers({
     // +"?dummy="+Date.now()
     var index = getCurrentPhotoIndex();
     if(index!=undefined) {
-      var url = "//images.shrikantpatnaik.photography/"+encodeURI(Template.instance().pagination.getPage()[index].key);
+      var url = "//" + Meteor.settings.public.photosBaseUrl + "/" + encodeURI(Template.instance().pagination.getPage()[index].key);
       if(Template.instance().state.get("HighQ")) {
         return _.replace(url, "LowQ", "HighQ");
       }

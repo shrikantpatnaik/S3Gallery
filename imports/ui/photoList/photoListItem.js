@@ -8,10 +8,10 @@ import './photoListItem.css';
 
 Template.photoListItem.helpers({
   thumbUrl() {
-    return "//images.shrikantpatnaik.photography/"+encodeURI(this.photo.key);
+    return "//" + Meteor.settings.public.photosBaseUrl + "/" + encodeURI(this.photo.key);
   },
   imageUrl() {
-    return "//images.shrikantpatnaik.photography/"+encodeURI(this.photo.key).replace("LowQ", "HighQ");
+    return "//" + Meteor.settings.public.photosBaseUrl + "/" + encodeURI(this.photo.key).replace("LowQ", "HighQ");
   },
   isVideo() {
     return _.endsWith(this.photo.key, ".mp4")
