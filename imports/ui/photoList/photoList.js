@@ -88,7 +88,7 @@ Template.photoList.helpers({
     if(index!=undefined) {
       var url = "//" + Meteor.settings.public.photosBaseUrl + "/" + encodeURI(Template.instance().pagination.getPage()[index].key);
       if(Template.instance().state.get("HighQ")) {
-        return _.replace(url, "LowQ", "HighQ");
+        return _.replace(url, Meteor.settings.public.s3LowQualityFolderName, Meteor.settings.public.s3HighQualityFolderName);
       }
       return url;
     }
