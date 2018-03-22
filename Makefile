@@ -3,6 +3,3 @@ build:
 
 docker-image:
 	docker build -t shrikantpatnaik/s3gallery .
-
-start-containers:
-	METEOR_SETTINGS=$(cat app/settings.json) docker-compose up
