@@ -10,7 +10,7 @@
         <a class="nav-item nav-link {{#if isAbout}} active{{/if}}" href="/about">About{{#if isAbout}} <span class="sr-only">(current)</span>{{/if}}</a>
         {{#if currentUser}}
         <a class="nav-item nav-link aws-update" href="#">Update From AWS</a>
-        <span class="nav-item nav-link disabled">Logged In</span>
+        <a class="nav-item nav-link" href="/changePassword">Change Password</a>
         <a class="nav-item nav-link logout" href="#">Logout</a>
         {{ else }}
         {{#if isAdmin}}

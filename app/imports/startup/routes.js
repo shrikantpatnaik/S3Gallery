@@ -6,6 +6,7 @@ import '../ui/albumList/albumList.js'
 import '../ui/album/album.js'
 import '../ui/header/header.js'
 import '../ui/about/about.js'
+import '../ui/changePassword/changePassword.js'
 
 FlowRouter.route('/', {
   action: function(params, queryParams) {
@@ -22,5 +23,11 @@ FlowRouter.route('/albums/:_id', {
 FlowRouter.route('/about', {
   action: function(params, queryParams) {
     BlazeLayout.render('mainLayout', { top: 'header', main: 'about' });
+  }
+})
+
+FlowRouter.route('/changePassword', {
+  action: function(params, queryParams) {
+    BlazeLayout.render('mainLayout', { top: 'header', main: 'changePassword' });
   }
 })
