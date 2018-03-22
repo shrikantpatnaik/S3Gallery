@@ -1,0 +1,16 @@
+app:
+  image: shrikantpatnaik/s3gallery
+  ports:
+    - "${METEOR_EXTERNAL_PORT}:3000"
+  links:
+    - mongo
+  environment:
+    - ROOT_URL=${METEOR_ROOT_URL}
+    - MONGO_URL=mongodb://mongo:27017/meteor
+
+  volumes:
+    - ${METEOR_SETTINGS_FOLDER}:/root/app/settings
+
+mongo:
+  image: mongo:latest
+  command: mongod --storageEngine=wiredTiger
