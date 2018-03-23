@@ -43,7 +43,7 @@ Template.photoList.onCreated(function bodyOnCreated() {
 
 function nextImage(tInstance) {
   if(tInstance.state.get("currentPhotoIndex") < tInstance.pagination.getPage().length - 1) {
-      tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") + 1);
+    tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") + 1);
   } else if(tInstance.state.get("currentPhotoIndex") == tInstance.pagination.getPage().length - 1 && tInstance.pagination.currentPage() != tInstance.pagination.totalPages()) {
     tInstance.pagination.currentPage(tInstance.pagination.currentPage() + 1)
     tInstance.state.set("currentPhotoIndex", 0)
@@ -52,7 +52,7 @@ function nextImage(tInstance) {
 
 function prevImage(tInstance) {
   if(tInstance.state.get("currentPhotoIndex") > 0) {
-      tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") - 1);
+    tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") - 1);
   } else if(tInstance.state.get("currentPhotoIndex") == 0 && tInstance.pagination.currentPage()!=1) {
     tInstance.pagination.currentPage(tInstance.pagination.currentPage() - 1)
     tInstance.state.set("currentPhotoIndex", tInstance.limitPerPage - 1)
@@ -80,12 +80,12 @@ Template.photoList.events({
     }
   },
   'click .prev'() {
-      document.getElementById('loadingDiv').style.display = "block"
-      prevImage(Template.instance())
+    document.getElementById('loadingDiv').style.display = "block"
+    prevImage(Template.instance())
   },
   'click .next'() {
-      document.getElementById('loadingDiv').style.display = "block"
-      nextImage(Template.instance());
+    document.getElementById('loadingDiv').style.display = "block"
+    nextImage(Template.instance());
   },
   'click .quality'() {
     document.getElementById('loadingDiv').style.display = "block"
