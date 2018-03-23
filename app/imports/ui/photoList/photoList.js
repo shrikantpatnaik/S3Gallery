@@ -42,14 +42,20 @@ Template.photoList.onCreated(function bodyOnCreated() {
 });
 
 function nextImage(tInstance) {
-  if(tInstance.state.get("currentPhotoIndex") < tInstance.limitPerPage - 1) {
+  if(tInstance.state.get("currentPhotoIndex") < tInstance.pagination.getPage().length - 1) {
       tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") + 1);
+  } else if(tInstance.state.get("currentPhotoIndex") == tInstance.pagination.getPage().length - 1 && tInstance.pagination.currentPage() != tInstance.pagination.totalPages()) {
+    tInstance.pagination.currentPage(tInstance.pagination.currentPage() + 1)
+    tInstance.state.set("currentPhotoIndex", 0)
   }
 }
 
 function prevImage(tInstance) {
   if(tInstance.state.get("currentPhotoIndex") > 0) {
       tInstance.state.set("currentPhotoIndex", tInstance.state.get("currentPhotoIndex") - 1);
+  } else if(tInstance.state.get("currentPhotoIndex") == 0 && tInstance.pagination.currentPage()!=1) {
+    tInstance.pagination.currentPage(tInstance.pagination.currentPage() - 1)
+    tInstance.state.set("currentPhotoIndex", tInstance.limitPerPage - 1)
   }
 }
 
@@ -130,10 +136,10 @@ Template.photoList.helpers({
     return Template.instance().state.get("HighQ")
   },
   isFirstItem() {
-    return getCurrentPhotoIndex() == 0;
+    return getCurrentPhotoIndex() == 0 && Template.instance().pagination.currentPage() == 1 ;
   },
   isLastItem() {
-    return getCurrentPhotoIndex() == Template.instance().limitPerPage - 1;
+    return ((getCurrentPhotoIndex() == Template.instance().pagination.getPage().length - 1) && (Template.instance().pagination.currentPage() == Template.instance().pagination.totalPages()));
   },
   getSelectedPhoto() {
     var index = getCurrentPhotoIndex();
