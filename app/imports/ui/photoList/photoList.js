@@ -22,6 +22,9 @@ Template.photoList.onCreated(function bodyOnCreated() {
     filters: {
       albumId: FlowRouter.getParam('_id'),
     },
+    sort: {
+      "metadata.DateTimeOriginal": 1,
+    },
   });
   this.state = new ReactiveDict();
   this.state.set("HighQ", false)
