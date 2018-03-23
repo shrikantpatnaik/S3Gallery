@@ -6,6 +6,9 @@ import { Photos } from './photos.js'
 
 import s3ls from 's3-ls'
 import _ from 'lodash'
+import exifToolBin from 'dist-exiftool'
+import Exif from 'simple-exiftool'
+import rp from 'request-promise'
 
 
 
@@ -34,7 +37,7 @@ if(Meteor.isServer){
     _.forEach(data.Contents, function(object) {
       if(Meteor.settings.public.AWS.s3LowQualityFolderName) {
         if(_.includes(object.Key, Meteor.settings.public.AWS.s3LowQualityFolderName)) {
-            insertPhotoIfDoesntExist(object.Key, albumId)
+          insertPhotoIfDoesntExist(object.Key, albumId)
         }
       } else {
         insertPhotoIfDoesntExist(object.Key, albumId)
@@ -50,14 +53,23 @@ if(Meteor.isServer){
       }
     }
   }
-  function insertPhotoIfDoesntExist(key, albumId) {
+  async function insertPhotoIfDoesntExist(key, albumId) {
     var photoParams = {
       key: key,
       albumId: albumId,
     }
     var photo = Photos.findOne(photoParams);
     if(!photo) {
-      Photos.insert(photoParams);
+      var newId = Photos.insert(photoParams);
+      photo = Photos.findOne(newId);
+    }
+    if(!photo.metadata) {
+      var exifData = await getExifDataAsync(photo);
+      Photos.update(photo._id, {
+        $set: {
+          metadata: exifData
+        }
+      })
     }
   }
   function insertOrFindAlbum(albumName) {
@@ -87,6 +99,37 @@ if(Meteor.isServer){
       console.log("aws update complete");
     })
     .catch(console.error);
+  }
+
+  async function getExifDataAsync(photo) {
+    try {
+      var url = encodeURI("http://"+Meteor.settings.public.photosBaseUrl+"/"+photo.key);
+      var response = await rp({
+        uri: url,
+        encoding: null,
+      });
+      var tags = await getEXIFFromBinary(response)
+      return tags;
+    } catch(err) {
+      console.log("Error: %s", err);
+    }
+  }
+
+  function getEXIFFromBinary(data) {
+    return new Promise(function(resolve, reject) {
+      Exif(data, {binary: exifToolBin, args:["-json", "-s", "-iptc:all", "-exif:all"]}, (error, metadata) => {
+        if (error) {
+          reject(error);
+        } else {
+          var keysToExclude = [
+            'ThumbnailOffset',
+            'ThumbnailLength',
+            'ThumbnailImage'
+          ]
+          resolve(_.omit(metadata, keysToExclude));
+        }
+      });
+    })
   }
 
   Meteor.methods({

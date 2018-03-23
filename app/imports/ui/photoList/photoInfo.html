@@ -1,0 +1,98 @@
+<template name="photoInfo">
+  {{#if metadata.Make}}
+  <div class="container-fluid">
+    <div class="row">
+      Keywords: {{metadata.Keywords}}
+    </div>
+    <div class="row">
+      Date: {{metadata.DigitalCreationDate}}
+    </div>
+    <div class="row">
+      Camera Info
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Make:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.Make}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Model:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.Model}}
+      </div>
+    </div>
+    <div class="row">
+      Camera Settings
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Exposure Mode:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ExposureMode}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Exposure:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ExposureTime}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        FNumber:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.FNumber}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        ISO:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ISO}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Shutter Speed:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ShutterSpeedValue}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Aperture:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ApertureValue}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Focal Length(35mm Equiv.):
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.FocalLengthIn35mmFormat}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-2 photoInfoKey">
+        Shutter Speed:
+      </div>
+      <div class="col-xs-10 photoInfoValue">
+        {{metadata.ShutterSpeedValue}}
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</template>

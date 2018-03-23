@@ -8,6 +8,7 @@ import _ from 'lodash'
 
 import './photoListItem.js';
 import '../paginator/paginator.js';
+import './photoInfo.js';
 
 import './photoList.html';
 
@@ -133,5 +134,13 @@ Template.photoList.helpers({
   },
   isLastItem() {
     return getCurrentPhotoIndex() == Template.instance().limitPerPage - 1;
+  },
+  getSelectedPhoto() {
+    var index = getCurrentPhotoIndex();
+    if(index!=undefined) {
+      return Template.instance().pagination.getPage()[index];
+    } else {
+      return "";
+    }
   },
 });
