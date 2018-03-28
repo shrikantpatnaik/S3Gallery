@@ -15,7 +15,7 @@ import './photoList.html';
 import './photoList.css'
 
 Template.photoList.onCreated(function bodyOnCreated() {
-  this.limitPerPage = 12;
+  this.limitPerPage = 24;
   this.pagination = new Meteor.Pagination(Photos, {
     perPage: this.limitPerPage,
     page: FlowRouter.getQueryParam("page") || 1,
