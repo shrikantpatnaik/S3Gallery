@@ -1,8 +1,8 @@
 <template name="photoList">
   {{#if isReady}}
-  <div class="row">
+  <div class="row" id="photoGalleryDiv">
     {{#each photos}}
-    {{> photoListItem photo=this index=@index}}
+    {{> photoListItem photo=this photoIndex=@index pagination=templatePagination}}
     {{/each}}
   </div>
   <div class="row">
@@ -11,34 +11,4 @@
   {{else}}
   Loading...
   {{/if}}
-
-  <!-- The Modal/Lightbox -->
-  <div id="myModal" class="modal">
-    <div class="close cursor">&times;</div>
-    <div class="modal-content">
-      <div id="loadingDiv" class="loading"></div>
-      <!-- <div class="quality">{{#if isHighQ}}Low{{else}}High{{/if}} Resolution</div> -->
-      <div class="mySlides">
-        {{#if isVideo}}
-        <video class="modalVideo" width="100%" controls controlsList="nodownload" loop>
-          <source src="{{getSelectedPhotoURL}}" type="video/mp4">
-          </video>
-          {{else}}
-          <img class="modalImage" src="{{getSelectedPhotoURL}}">
-          {{/if}}
-        </div>
-
-        {{#unless isFirstItem}}
-        <a class="prev">&#10094;</a>
-        {{/unless}}
-        {{#unless isLastItem}}
-        <a class="next">&#10095;</a>
-        {{/unless}}
-
-        <div class="caption-container">
-          {{> photoInfo getSelectedPhoto}}
-          <p class="caption"></p>
-        </div>
-      </div>
-    </div>
-  </template>
+</template>

@@ -1,35 +1,11 @@
-.photoTile {
-  padding: 10px;
+.tooltip {
+  z-index: 9999;
 }
 
-.photoListImage {
-  width: 100%;
+#cboxInfo {
+  margin-left: 20px;
 }
 
-.galleryVideo {
-  width: 100%;
-  margin-top: 10%
-}
-
-.playpause {
-  background-image:url('/playButton.png');
-  background-repeat:no-repeat;
-  width:50%;
-  height:50%;
-  position:absolute;
-  left:0%;
-  right:0%;
-  top:0%;
-  bottom:0%;
-  margin:auto;
-  background-size:contain;
-  background-position: center;
-}
-
-.hover-shadow {
-  transition: 0.3s
-}
-
-.hover-shadow:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+#cboxInfo img {
+  height: 20px;
 }

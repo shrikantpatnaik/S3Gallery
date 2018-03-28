@@ -11,6 +11,7 @@
     "meteor-node-stubs": "^0.3.2",
     "request-promise": "^4.2.2",
     "s3-ls": "^2.0.1",
-    "simple-exiftool": "^1.1.0"
+    "simple-exiftool": "^1.1.0",
+    "tippy.js": "^2.4.1"
   }
 }
