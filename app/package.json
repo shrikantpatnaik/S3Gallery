@@ -2,7 +2,26 @@
   "name": "simple-todos-blaze",
   "private": true,
   "scripts": {
-    "start": "meteor run"
+    "start": "meteor run",
+    "lint": "eslint .",
+    "pretest": "npm run lint --silent"
+  },
+  "eslintConfig": {
+    "extends": "@meteorjs/eslint-config-meteor",
+    "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "jquery": true
+    },
+    "rules": {
+      "no-plusplus": [
+        2,
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ]
+    }
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.36",
@@ -12,6 +31,18 @@
     "request-promise": "^4.2.2",
     "s3-ls": "^2.0.1",
     "simple-exiftool": "^1.1.0",
+    "sweetalert2": "^7.18.0",
     "tippy.js": "^2.4.1"
+  },
+  "devDependencies": {
+    "@meteorjs/eslint-config-meteor": "^1.0.5",
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-import-resolver-meteor": "^0.4.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-meteor": "^4.2.0",
+    "eslint-plugin-react": "^7.7.0"
   }
 }

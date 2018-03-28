@@ -1,2 +1,2 @@
-import './photoInfo.html'
-import './photoInfo.css'
+import './photoInfo.html';
+import './photoInfo.css';

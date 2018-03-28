@@ -1,1 +1,1 @@
-import './mainLayout.html'
+import './mainLayout.html';

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Albums } from '../../api/albums.js';
 
@@ -13,5 +14,5 @@ Template.album.onCreated(function bodyOnCreated() {
 Template.album.helpers({
   album() {
     return Albums.findOne(FlowRouter.getParam('_id'));
-  }
+  },
 });

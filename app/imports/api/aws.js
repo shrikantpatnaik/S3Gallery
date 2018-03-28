@@ -1,140 +1,139 @@
 import { Meteor } from 'meteor/meteor';
+import { AWS } from 'meteor/peerlibrary:aws-sdk';
 
-import { Albums } from './albums.js'
+import s3ls from 's3-ls';
+import _ from 'lodash';
+import exifToolBin from 'dist-exiftool';
+import Exif from 'simple-exiftool';
+import rp from 'request-promise';
 
-import { Photos } from './photos.js'
+import { Albums } from './albums.js';
 
-import s3ls from 's3-ls'
-import _ from 'lodash'
-import exifToolBin from 'dist-exiftool'
-import Exif from 'simple-exiftool'
-import rp from 'request-promise'
+import { Photos } from './photos.js';
 
 
+if (!Meteor.settings.AWS) {
+  throw (new Meteor.Error('AWS Settings must be specified'));
+}
 
-if(Meteor.isServer){
-  if(!Meteor.settings.AWS) {
-    throw (new Meteor.Error("AWS Settings must be specified"));
-  }
+const bucketName = Meteor.settings.AWS.s3BucketName;
+const mainFolder = Meteor.settings.AWS.s3BucketMainFolder;
 
-  var bucketName = Meteor.settings.AWS.s3BucketName;
-  var mainFolder = Meteor.settings.AWS.s3BucketMainFolder;
+AWS.config.update({
+  accessKeyId: Meteor.settings.AWS.accessKeyId,
+  secretAccessKey: Meteor.settings.AWS.secretAccessKey,
+});
 
-  AWS.config.update({
-    accessKeyId: Meteor.settings.AWS.accessKeyId,
-    secretAccessKey: Meteor.settings.AWS.secretAccessKey,
-  })
+const s3 = new AWS.S3();
+const lister = s3ls({ bucket: bucketName, s3 });
 
-  var s3 = new AWS.S3()
-  var lister = s3ls({bucket: bucketName, s3: s3});
+const params = {
+  Bucket: bucketName,
+};
 
-  var params = {
-    Bucket: bucketName
-  };
-
-  function insertKeysIntoAlbum(params, albumId) {
-    var data = s3.listObjectsV2Sync(params);
-    _.forEach(data.Contents, function(object) {
-      if(Meteor.settings.public.AWS.s3LowQualityFolderName) {
-        if(_.includes(object.Key, Meteor.settings.public.AWS.s3LowQualityFolderName)) {
-          insertPhotoIfDoesntExist(object.Key, albumId)
-        }
+function getEXIFFromBinary(data) {
+  return new Promise(function(resolve, reject) {
+    Exif(data, { binary: exifToolBin, args: ['-json', '-s', '-iptc:all', '-exif:all'] }, (error, metadata) => {
+      if (error) {
+        reject(error);
       } else {
-        insertPhotoIfDoesntExist(object.Key, albumId)
+        const keysToExclude = [
+          'ThumbnailOffset',
+          'ThumbnailLength',
+          'ThumbnailImage',
+        ];
+        resolve(_.omit(metadata, keysToExclude));
       }
-    })
+    });
+  });
+}
 
-    if(data.isTruncated) {
-      params.ContinuationToken = data.NextContinuationToken;
-      insertKeysIntoAlbum(params);
-    } else {
-      if(params.ContinuationToken) {
-        delete params.ContinuationToken
+async function getExifDataAsync(photo) {
+  try {
+    const url = encodeURI(`http://${Meteor.settings.public.photosBaseUrl}/${photo.key}`);
+    const response = await rp({
+      uri: url,
+      encoding: null,
+    });
+    const tags = await getEXIFFromBinary(response);
+    return tags;
+  } catch (err) {
+    return null;
+  }
+}
+
+async function insertPhotoIfDoesntExist(key, albumId) {
+  const photoParams = {
+    key,
+    albumId,
+  };
+  let photo = Photos.findOne(photoParams);
+  if (!photo) {
+    const newId = Photos.insert(photoParams);
+    photo = Photos.findOne(newId);
+  }
+  if (!photo.metadata) {
+    const exifData = await getExifDataAsync(photo);
+    Photos.update(photo._id, {
+      $set: {
+        metadata: exifData,
+      },
+    });
+  }
+}
+
+function insertKeysIntoAlbum(s3params, albumId) {
+  const data = s3.listObjectsV2Sync(s3params);
+  _.forEach(data.Contents, function(object) {
+    if (Meteor.settings.public.AWS.s3LowQualityFolderName) {
+      if (_.includes(object.Key, Meteor.settings.public.AWS.s3LowQualityFolderName)) {
+        insertPhotoIfDoesntExist(object.Key, albumId);
       }
-    }
-  }
-  async function insertPhotoIfDoesntExist(key, albumId) {
-    var photoParams = {
-      key: key,
-      albumId: albumId,
-    }
-    var photo = Photos.findOne(photoParams);
-    if(!photo) {
-      var newId = Photos.insert(photoParams);
-      photo = Photos.findOne(newId);
-    }
-    if(!photo.metadata) {
-      var exifData = await getExifDataAsync(photo);
-      Photos.update(photo._id, {
-        $set: {
-          metadata: exifData
-        }
-      })
-    }
-  }
-  function insertOrFindAlbum(albumName) {
-    var album = Albums.findOne({name: albumName});
-    if(album) {
-      return album._id;
     } else {
-      return Albums.insert({name: albumName})
+      insertPhotoIfDoesntExist(object.Key, albumId);
     }
-  }
+  });
 
-  function updateFromAws() {
-    console.log("aws update start");
-    lister.ls("/"+mainFolder).then((data) => {
-      _.forEach(data.folders, function(folder) {
-        params.Prefix = folder;
-        var folderName = _.trim(_.replace(folder, mainFolder, ''), '/');
-        var albumId = insertOrFindAlbum(folderName);
-        insertKeysIntoAlbum(params, albumId);
-        var album = Albums.findOne(albumId)
-        if(!album.featuredImageKey) {
-          Albums.update({_id:albumId}, {$set:{
-            featuredImageKey: Photos.findOne({albumId: albumId}).key
-          }});
-        }
-      })
-      console.log("aws update complete");
-    })
-    .catch(console.error);
+  if (data.isTruncated) {
+    params.ContinuationToken = data.NextContinuationToken;
+    insertKeysIntoAlbum(params);
+  } else if (params.ContinuationToken) {
+    delete params.ContinuationToken;
   }
+}
 
-  async function getExifDataAsync(photo) {
-    try {
-      var url = encodeURI("http://"+Meteor.settings.public.photosBaseUrl+"/"+photo.key);
-      var response = await rp({
-        uri: url,
-        encoding: null,
-      });
-      var tags = await getEXIFFromBinary(response)
-      return tags;
-    } catch(err) {
-      console.log("Error: %s", err);
-    }
+function insertOrFindAlbum(albumName) {
+  const album = Albums.findOne({ name: albumName });
+  if (album) {
+    return album._id;
   }
+  return Albums.insert({ name: albumName });
+}
 
-  function getEXIFFromBinary(data) {
-    return new Promise(function(resolve, reject) {
-      Exif(data, {binary: exifToolBin, args:["-json", "-s", "-iptc:all", "-exif:all"]}, (error, metadata) => {
-        if (error) {
-          reject(error);
-        } else {
-          var keysToExclude = [
-            'ThumbnailOffset',
-            'ThumbnailLength',
-            'ThumbnailImage'
-          ]
-          resolve(_.omit(metadata, keysToExclude));
-        }
-      });
-    })
-  }
+async function updateFromAws() {
+  await lister.ls(`/${mainFolder}`).then((data) => {
+    _.forEach(data.folders, function(folder) {
+      params.Prefix = folder;
+      const folderName = _.trim(_.replace(folder, mainFolder, ''), '/');
+      const albumId = insertOrFindAlbum(folderName);
+      insertKeysIntoAlbum(params, albumId);
+      const album = Albums.findOne(albumId);
+      if (!album.featuredImageKey) {
+        Albums.update({ _id: albumId }, {
+          $set: {
+            featuredImageKey: Photos.findOne({ albumId }).key,
+          },
+        });
+      }
+    });
+  });
+}
 
+
+if (Meteor.isServer) {
   Meteor.methods({
     'aws.update'() {
       updateFromAws();
     },
-  })
+  });
 }

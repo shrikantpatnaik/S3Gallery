@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Albums } from '../../api/albums.js';
 
@@ -11,7 +12,7 @@ import './albumList.html';
 Template.albumList.onCreated(function bodyOnCreated() {
   this.pagination = new Meteor.Pagination(Albums, {
     perPage: 12,
-    page: FlowRouter.getQueryParam("page") || 1,
+    page: FlowRouter.getQueryParam('page') || 1,
   });
 });
 
