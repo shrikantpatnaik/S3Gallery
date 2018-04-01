@@ -134,7 +134,11 @@ async function updateFromAws() {
 if (Meteor.isServer) {
   Meteor.methods({
     async 'aws.update'() {
-      await updateFromAws();
+      if (!Meteor.userId()) {
+        throw new Meteor.Error('Not authorized to delete photos');
+      } else {
+        await updateFromAws();
+      }
     },
   });
 }

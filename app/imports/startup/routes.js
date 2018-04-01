@@ -6,6 +6,7 @@ import '../ui/albumList/albumList.js';
 import '../ui/album/album.js';
 import '../ui/header/header.js';
 import '../ui/about/about.js';
+import '../ui/admin/admin.js';
 import '../ui/changePassword/changePassword.js';
 
 FlowRouter.route('/', {
@@ -29,5 +30,11 @@ FlowRouter.route('/about', {
 FlowRouter.route('/changePassword', {
   action() {
     BlazeLayout.render('mainLayout', { top: 'header', main: 'changePassword' });
+  },
+});
+
+FlowRouter.route('/admin', {
+  action() {
+    BlazeLayout.render('mainLayout', { top: 'header', main: 'admin' });
   },
 });

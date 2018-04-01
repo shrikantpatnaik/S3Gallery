@@ -1,0 +1,13 @@
+<template name="admin">
+  {{#if currentUser}}
+ <ul>
+   <li><a href="/changePassword">Change Password</a></li>
+   <li><a class="aws-update" href="#">Update From AWS</a></li>
+   <li><a class="resetPhotos" href="#">Reset Photos</a></li>
+   <li><a class="resetAlbums" href="#">Reset Albums</a></li>
+   <li><a class="logout" href="#">Logout</a></li>
+ </ul>
+ {{else}}
+  You must be logged in to view admin options
+ {{/if}}
+</template>
