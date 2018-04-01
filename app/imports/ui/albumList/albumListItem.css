@@ -1,8 +1,5 @@
-.albumListName {
+.justified-gallery > a > .caption {
+  display: block;
   font-size: 16px;
-  font-size: 2vh;
-}
-
-.albumTile {
-  padding: 10px;
+  opacity: 0.7;
 }

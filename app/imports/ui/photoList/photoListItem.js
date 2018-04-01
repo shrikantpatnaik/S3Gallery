@@ -3,9 +3,9 @@ import { Meteor } from 'meteor/meteor';
 
 import _ from 'lodash';
 
-import './jquery.justifiedGallery.min.js';
+import '../common/jquery.justifiedGallery.min.js';
 import './jquery.colorbox.min.js';
-import './justifiedGallery.min.css';
+import '../common/justifiedGallery.min.css';
 
 import './photoListItem.html';
 

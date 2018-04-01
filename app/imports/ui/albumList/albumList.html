@@ -14,9 +14,9 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div id="albumListDiv" class="row">
     {{#each albums}}
-    {{> albumListItem}}
+    {{> albumListItem album=this albumIndex=@index pagination=templatePagination}}
     {{/each}}
   </div>
   <div class="row">

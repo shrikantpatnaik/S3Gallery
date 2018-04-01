@@ -8,6 +8,7 @@ import { Albums } from '../../api/albums.js';
 import './albumListItem.js';
 import '../paginator/paginator.js';
 
+import './albumListItem.css';
 import './albumList.html';
 
 Template.albumList.onCreated(function bodyOnCreated() {
