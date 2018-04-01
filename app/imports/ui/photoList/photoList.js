@@ -54,6 +54,9 @@ Template.photoList.onCreated(function bodyOnCreated() {
     myTemplate.innerHTML = Blaze.toHTMLWithData(Template.photoInfo, templateInstance.state.get('currentPhoto'));
     tippy('#cboxInfo', {
       html: myTemplate,
+      placement: 'right',
+      trigger: 'mouseenter',
+      theme: 's3gallery',
     });
   });
 });

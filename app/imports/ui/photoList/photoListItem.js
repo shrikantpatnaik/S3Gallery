@@ -36,7 +36,7 @@ Template.photoListItem.onRendered(function() {
         loop: false,
         title() {
           const title = $(this).attr('title');
-          return `${title} <span data-tippy-trigger="mouseenter" id="cboxInfo"><img src="/info_icon.png"/></span>`;
+          return `${title} <span id="cboxInfo"><img src="/info_icon.png"/></span>`;
         },
       });
     });

@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import _ from 'lodash';
+import swal from 'sweetalert2';
 
 import './header.html';
 
@@ -10,7 +11,20 @@ import './header.html';
 Template.header.events({
   'click .aws-update'(event) {
     event.preventDefault();
-    Meteor.call('aws.update');
+    Meteor.call('aws.update', function(error) {
+      if (error) {
+        swal({
+          title: error.reason,
+          text: error.message,
+          type: 'error',
+        });
+      } else {
+        swal({
+          text: 'AWS Update Complete',
+          type: 'success',
+        });
+      }
+    });
   },
   'submit .loginForm'(event) {
     event.preventDefault();

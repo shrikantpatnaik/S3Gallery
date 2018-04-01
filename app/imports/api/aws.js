@@ -33,7 +33,8 @@ const params = {
 
 function getEXIFFromBinary(data) {
   return new Promise(function(resolve, reject) {
-    Exif(data, { binary: exifToolBin, args: ['-json', '-s', '-iptc:all', '-exif:all'] }, (error, metadata) => {
+    const exifToolArgs = ['-json', '-s', '-iptc:all', '-exif:all', '-location:all', '-xmp:label'];
+    Exif(data, { binary: exifToolBin, args: exifToolArgs }, (error, metadata) => {
       if (error) {
         reject(error);
       } else {
@@ -132,8 +133,8 @@ async function updateFromAws() {
 
 if (Meteor.isServer) {
   Meteor.methods({
-    'aws.update'() {
-      updateFromAws();
+    async 'aws.update'() {
+      await updateFromAws();
     },
   });
 }
