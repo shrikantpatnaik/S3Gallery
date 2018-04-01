@@ -1,6 +1,20 @@
 <template name="albumList">
   {{#if isReady}}
   <div class="row">
+    <div class="col-sm-10"></div>
+    <div class="col-sm-2">
+      <button class="btn btn-secondary dropdown-toggle sort-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Sort By
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item sort-date-a {{#if isSortDateA}}active{{/if}}" href="#">Date (Ascending)</a>
+        <a class="dropdown-item sort-date-d {{#if isSortDateD}}active{{/if}}" href="#">Date (Descending)</a>
+        <a class="dropdown-item sort-az-a {{#if isSortAzA}}active{{/if}}" href="#">A-Z (Ascending)</a>
+        <a class="dropdown-item sort-az-d {{#if isSortAzD}}active{{/if}}" href="#">A-Z (Descending)</a>
+      </div>
+    </div>
+  </div>
+  <div class="row">
     {{#each albums}}
     {{> albumListItem}}
     {{/each}}
