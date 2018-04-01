@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { AWS } from 'meteor/peerlibrary:aws-sdk';
+import { moment } from 'meteor/momentjs:moment';
 
 import s3ls from 's3-ls';
 import _ from 'lodash';
@@ -119,10 +120,28 @@ async function updateFromAws() {
       const albumId = insertOrFindAlbum(folderName);
       insertKeysIntoAlbum(params, albumId);
       const album = Albums.findOne(albumId);
+      const firstPhoto = Photos.find({
+        albumId,
+        'metadata.DateTimeOriginal': { $exists: true },
+        key: { $regex: '.*jpg' },
+      }, {
+        sort: {
+          'metadata.DateTimeOriginal': 1,
+        },
+        limit: 1,
+      }).fetch();
+      const firstPhotoDate = moment(firstPhoto[0].metadata.DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss').toDate();
       if (!album.featuredImageKey) {
         Albums.update({ _id: albumId }, {
           $set: {
+            firstPhotoDate,
             featuredImageKey: Photos.findOne({ albumId }).key,
+          },
+        });
+      } else {
+        Albums.update({ _id: albumId }, {
+          $set: {
+            firstPhotoDate,
           },
         });
       }
